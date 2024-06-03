@@ -1,5 +1,11 @@
 const RANDOM_IMG_ENDPOINT = "https://dog.ceo/api/breeds/image/random";
 
+// import {
+//   getRandomElement,
+//   shuffleArray,
+//   getMultipleChoices,
+// } from "./utilities";
+
 const BREEDS = [
   "affenpinscher",
   "african",
@@ -180,10 +186,18 @@ function getMultipleChoices(n, correctAnswer, possibleArray) {
 //getMultipleChoices(3, "string", ["array", "obj", "number", "vferfe", "fege"]);
 
 // TODO 2
+
 // Given a URL such as "https://images.dog.ceo/breeds/poodle-standard/n02113799_2280.jpg"
 // return the breed name string as formatted in the breed list, e.g. "standard poodle"
+//let response = await fetch("https://dog.ceo/api/breeds/image/random");
+//let body = await response.json();
+//let { message } = body;
 function getBreedFromURL(url) {
-  // The string method .split(char) may come in handy
+  //let urlParts = url.split("/").[4];
+  let [, , , , namebreed] = url.split("/");
+  let [breed, variety] = namebreed.split("-");
+  return [variety, breed].join(" ").trim();
+  // The string method .split(char) may come in handy .split("-")
   // Try to use destructuring as much as you can
 }
 
@@ -191,7 +205,12 @@ function getBreedFromURL(url) {
 // Given a URL, fetch the resource at that URL,
 // then parse the response as a JSON object,
 // finally return the "message" property of its body
-async function fetchMessage(url) {}
+async function fetchMessage(url) {
+  const response = await fetch(url);
+  const body = await response.json();
+  const { message } = body;
+  return message;
+}
 
 // Function to add the multiple-choice buttons to the page
 function renderButtons(choicesArray, correctAnswer) {
@@ -215,6 +234,15 @@ function renderButtons(choicesArray, correctAnswer) {
   // Create a button element whose name, value, and textContent properties are the value of that choice,
   // attach a "click" event listener with the buttonHandler function,
   // and append the button as a child of the options element
+
+  for (let choices of choicesArray) {
+    const button = document.createElement("button");
+    button.textContent = choices;
+    button.value = choices;
+    button.name = choices;
+    button.addEventListener("click", buttonHandler);
+    options.appendChild(button);
+  }
 }
 
 // Function to add the quiz content to the page
@@ -243,4 +271,15 @@ async function loadQuizData() {
 
 // TODO 5
 // Asynchronously call the loadQuizData() function,
+const [imgUrl, correctAnswer, choices] = await loadQuizData();
+
 // Then call renderQuiz() with the returned imageUrl, correctAnswer, and choices
+renderQuiz(imgUrl, correctAnswer, choices);
+
+// async function initQuiz() {
+//   const [imgUrl, correctAnswer, choices] = await loadQuizData();
+//   renderQuiz(imgUrl, correctAnswer, choices);
+// }
+
+// // Apelarea funcției pentru a inițializa quiz-ul
+// initQuiz();
